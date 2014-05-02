@@ -164,7 +164,7 @@ module Devise
 
           def generate_small_token(column)
             loop do
-              token = Devise.friendly_token[0, sms_token_size].upcase
+              token = Devise.friendly_token[0, sms_token_size]
               break token unless to_adapter.find_first({ column => token })
             end
           end
