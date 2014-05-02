@@ -53,7 +53,7 @@ module Devise
       def send_sms_token
         if(self.phone?)
           generate_sms_token!
-          ::Devise.sms_sender.send_sms(self.phone, I18n.t(:"devise.sms_activations.sms_body", :sms_confirmation_token => self.sms_confirmation_token, :default => self.sms_confirmation_token))
+          ::Devise.sms_sender.send_sms(self.phone, self.sms_confirmation_token)
         else
           self.errors.add(:sms_confirmation_token, :no_phone_associated)
           false
