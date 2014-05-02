@@ -52,7 +52,7 @@ module Devise
       # Send confirmation token by sms
       def send_sms_token
         if(self.phone?)
-          generate_sms_token! if self.generate_sms_token.nil?
+          generate_sms_token!
           ::Devise.sms_sender.send_sms(self.phone, I18n.t(:"devise.sms_activations.sms_body", :sms_confirmation_token => self.sms_confirmation_token, :default => self.sms_confirmation_token))
         else
           self.errors.add(:sms_confirmation_token, :no_phone_associated)
@@ -65,12 +65,12 @@ module Devise
         unless_sms_confirmed { send_sms_token }
       end
 
-      # Overwrites active? from Devise::Models::Activatable for sms confirmation
+      # Overwrites active_for_authentication? from Devise::Models::Activatable for sms confirmation
       # by verifying whether a user is active to sign in or not. If the user
       # is already confirmed, it should never be blocked. Otherwise we need to
       # calculate if the confirm time has not expired for this user.
 
-      def active?
+      def active_for_authentication?
         !sms_confirmation_required? || confirmed_sms? || confirmation_sms_period_valid?
       end
 
@@ -164,7 +164,7 @@ module Devise
 
           def generate_small_token(column)
             loop do
-              token = Devise.friendly_token[0,5].upcase
+              token = Devise.friendly_token[0, sms_token_size].upcase
               break token unless to_adapter.find_first({ column => token })
             end
           end
@@ -174,7 +174,7 @@ module Devise
             generate_small_token(:sms_confirmation_token)
           end
 
-          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys)
+          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_token_size)
         end
     end
   end

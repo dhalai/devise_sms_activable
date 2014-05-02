@@ -25,15 +25,18 @@ module DeviseSmsActivable
 
   # The keys searched for confirmation values.
   # config.sms_confirmation_keys = [:email]
-  
-  # Your SmsSender class. The provided one uses 
+
+  # Your SmsSender class. The provided one uses
   # moonshado-sms gem so install it and configure
   # if you want to use it.
   # A simple instance of the class has been copied in your lib folder
   # For further informations on using and configuring moonshado-sms gem check
   # https://github.com/moonshado/moonshado-sms
   # config.sms_sender = "Devise::SmsSender"
-  
+
+  # Token size
+  # config.sms_token_size = 5
+
 CONTENT
             end
           end
@@ -45,7 +48,7 @@ CONTENT
       end
       
       def copy_default_smser
-        copy_file "lib/sms_sender.rb", "lib/devise_sms_sender.rb"
+        copy_file "lib/sms_sender.rb", "lib/devise/sms_sender.rb"
       end
     end
   end
